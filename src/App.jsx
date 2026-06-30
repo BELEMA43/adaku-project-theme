@@ -1,11 +1,17 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import Header from "./components/Header";
+import TodoForm from "./components/TodoForm";
+import { Pencil, Trash2 } from "lucide-react";
 
 const App = () => {
   const [task, setTask] = useState("");
   const [todos, setTodos] = useState([]);
 
+  console.log(todos);
+
   // console.log(todos);
+
+  // CRUD - Create, Read, Update, Delete
 
   const handleCreateTask = (e) => {
     e.preventDefault();
@@ -21,27 +27,62 @@ const App = () => {
     setTask("");
   };
 
+  const handleToggleCompleted = (id) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo,
+      ),
+    );
+  };
+
+  const handleDelete = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 px-4 py-10">
       <div className="w-full max-w-lg mx-auto">
-        <header className="mb-8 text-center">
-          <h1 className="text-4xl font-bold text-gray-800">Adaku</h1>
-        </header>
+        <Header />
 
         {/* Task Creator Form */}
-        <form onSubmit={handleCreateTask} className="flex gap-3 mb-6">
-          <input
-            type="text"
-            value={task}
-            onChange={(e) => setTask(e.target.value)}
-            placeholder="Buy groceries"
-            className="flex-1 border border-gray-300 bg-white rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500"
-          />
+        <TodoForm
+          handleCreateTask={handleCreateTask}
+          task={task}
+          setTask={setTask}
+        />
 
-          <button className="group flex items-center justify-center rounded-lg bg-blue-600 text-white px-5 py-2.5 cursor-pointer hover:bg-blue-800">
-            <Plus className="w-5 h-5" />
-          </button>
-        </form>
+        {todos.length === 0 ? (
+          <p className="text-center text-gray-500">No tasks yet.</p>
+        ) : (
+          <ul className="flex flex-col gap-2 mb-8">
+            {todos.map((todo) => (
+              <li
+                key={todo.id}
+                className="group flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 hover:border-gray-300 hover:bg-gray-50"
+              >
+                <input
+                  type="checkbox"
+                  onChange={() => handleToggleCompleted(todo.id)}
+                  className="h-5 w-5 cursor-pointer rounded border-gray-300"
+                />
+                <span
+                  className={`flex-1 text-gray-800 ${todo.completed ? "line-through" : ""}`}
+                >
+                  {todo.text}
+                </span>
+                <button className="rounded p-1.5 text-gray-500 opacity-70 hover:bg-gray-100 group-hover:opacity-100">
+                  <Pencil className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => handleDelete(todo.id)}
+                  className="rounded p-1.5 text-red-500 opacity-70 hover:bg-red-50 group-hover:opacity-100"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
