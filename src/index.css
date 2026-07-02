@@ -1,1 +1,22 @@
-@import "tailwindcss"
+@import "tailwindcss";
+
+@theme {
+  --color-ui-bg: var(--bg);
+  --color-ui-header: var(--header-text);
+  --color-ui-inputColor: var(--input-field);
+  --color-ui-gray: var(--gray);
+}
+
+:root {
+  --bg: #f3f4f6;
+  --header-text: #1e2939;
+  --input-field: #ffffff;
+  --gray-change: #d1d5dc;
+}
+
+[data-theme="dark"] {
+  --bg: #101828;
+  --header-text: #f3f4f6;
+  --input-field: #364153;
+  --gray-change: rgb(81, 84, 87);
+}
